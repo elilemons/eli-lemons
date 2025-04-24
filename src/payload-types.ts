@@ -193,7 +193,7 @@ export interface Page {
       | null;
     media?: (string | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | LinkBlock)[];
   meta?: {
     title?: string | null;
     /**
@@ -731,13 +731,25 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LinkBlock".
+ */
+export interface LinkBlock {
+  label: string;
+  url: string;
+  newTab?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'linkBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "links".
  */
 export interface Link {
   id: string;
-  name: string;
-  href: string;
-  opensInNewTab?: boolean | null;
+  label: string;
+  url: string;
+  newTab?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1035,6 +1047,7 @@ export interface PagesSelect<T extends boolean = true> {
         mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
+        linkBlock?: T | LinkBlockSelect<T>;
       };
   meta?:
     | T
@@ -1131,6 +1144,17 @@ export interface FormBlockSelect<T extends boolean = true> {
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LinkBlock_select".
+ */
+export interface LinkBlockSelect<T extends boolean = true> {
+  label?: T;
+  url?: T;
+  newTab?: T;
   id?: T;
   blockName?: T;
 }
@@ -1283,9 +1307,9 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "links_select".
  */
 export interface LinksSelect<T extends boolean = true> {
-  name?: T;
-  href?: T;
-  opensInNewTab?: T;
+  label?: T;
+  url?: T;
+  newTab?: T;
   updatedAt?: T;
   createdAt?: T;
 }

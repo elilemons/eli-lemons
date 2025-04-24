@@ -1,10 +1,8 @@
-import { CollectionConfig } from 'payload'
+import type { Block } from 'payload';
 
-const Links: CollectionConfig = {
-  slug: 'links',
-  admin: {
-    useAsTitle: 'label',
-  },
+export const LinkBlock: Block = {
+  slug: 'linkBlock',
+  interfaceName: 'LinkBlock',
   fields: [
     {
       name: 'label',
@@ -20,8 +18,6 @@ const Links: CollectionConfig = {
       name: 'newTab',
       type: 'checkbox',
       defaultValue: false,
-    },
-  ],
+    }
+  ]
 }
-
-export default Links
