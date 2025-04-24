@@ -106,6 +106,17 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'slide-left-right': {
+          '0%': {
+            left: '100%',
+          },
+          '100%': {
+            left: 0,
+          },
+        },
+      },
+      animation: {
+        'slide-left-right': 'slide-left-right 1s cubic-bezier(0.83, 0, 0.17, 1) infinite alternate',
       },
       typography: () => ({
         DEFAULT: {
