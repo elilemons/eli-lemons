@@ -1,4 +1,4 @@
-import type { Link, LinkBlock as LinkBlockProps } from '@/payload-types'
+import type { LinkBlock as LinkBlockProps } from '@/payload-types'
 import { CMSLink } from '../../components/Link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
