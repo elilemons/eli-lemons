@@ -14,7 +14,13 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { LinkBlock } from '@/blocks/LinkBlock/config';
+import { LinkBlock } from '@/blocks/LinkBlock/config'
+import { CallToAction } from '@/blocks/CallToAction/config'
+import { FormBlock } from '@/blocks/Form/config'
+import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { hero } from '@/heros/config'
+import { Content } from '@/blocks/Content/config'
+import { Archive } from '@/blocks/ArchiveBlock/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
