@@ -734,9 +734,7 @@ export interface Form {
  * via the `definition` "LinkBlock".
  */
 export interface LinkBlock {
-  label: string;
-  url: string;
-  newTab?: boolean | null;
+  links?: (string | Link)[] | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'linkBlock';
@@ -1152,9 +1150,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  * via the `definition` "LinkBlock_select".
  */
 export interface LinkBlockSelect<T extends boolean = true> {
-  label?: T;
-  url?: T;
-  newTab?: T;
+  links?: T;
   id?: T;
   blockName?: T;
 }
