@@ -71,7 +71,6 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
-    links: Link;
     users: User;
     redirects: Redirect;
     forms: Form;
@@ -88,7 +87,6 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    links: LinksSelect<false> | LinksSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -731,18 +729,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "links".
- */
-export interface Link {
-  id: string;
-  name: string;
-  href: string;
-  opensInNewTab?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -928,10 +914,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: string | Category;
-      } | null)
-    | ({
-        relationTo: 'links';
-        value: string | Link;
       } | null)
     | ({
         relationTo: 'users';
@@ -1275,17 +1257,6 @@ export interface CategoriesSelect<T extends boolean = true> {
         label?: T;
         id?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "links_select".
- */
-export interface LinksSelect<T extends boolean = true> {
-  name?: T;
-  href?: T;
-  opensInNewTab?: T;
   updatedAt?: T;
   createdAt?: T;
 }
