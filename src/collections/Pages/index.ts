@@ -14,7 +14,7 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { LinkBlock } from '@/blocks/LinkBlock/config'
+import { LinkBlock } from '@/blocks/LinkBlock/config';
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -62,11 +62,15 @@ export const Pages: CollectionConfig<'pages'> = {
       type: 'tabs',
       tabs: [
         {
+          fields: [hero],
+          label: 'Hero',
+        },
+        {
           fields: [
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [LinkBlock],
+              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock, LinkBlock],
               required: true,
               admin: {
                 initCollapsed: true,
