@@ -35,7 +35,7 @@ export const LinkBlock: React.FC<Props> = async ({ className, links = [] }) => {
         <CMSLink
           key={link.id}
           className={cn(
-            'text-white relative lowercase',
+            'text-white relative lowercase text-6xl pr-5',
             'after:content-["•"] after:absolute after:top-[10px]',
             'transition-[letter-spacing] left-[inherit] duration-300 ease-in-out tracking-normal',
             'hover:tracking-widest',

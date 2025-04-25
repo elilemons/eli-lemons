@@ -2,7 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap');
+
 @layer base {
+
   h1,
   h2,
   h3,
@@ -11,6 +14,11 @@
   h6 {
     font-size: unset;
     font-weight: unset;
+  }
+
+  body {
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 900;
   }
 
   :root {
@@ -88,6 +96,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground min-h-[100vh] flex flex-col;
   }
