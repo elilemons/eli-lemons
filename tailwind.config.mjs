@@ -95,9 +95,8 @@ const config = {
         warning: 'hsl(var(--warning))',
       },
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
-        sans: ['var(--font-geist-sans)'],
-        body: ['Roboto', 'sans-serif'],
+        mono: ['"Roboto Mono"'],
+        sans: ['"Roboto"'],
       },
       keyframes: {
         'accordion-down': {

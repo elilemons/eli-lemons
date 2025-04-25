@@ -35,6 +35,7 @@ export const LinkBlock: React.FC<Props> = async ({ className, links = [] }) => {
         <div key={link.id} className="relative text-6xl group hover:cursor-pointer">
           <CMSLink
             className={cn(
+              'font-black',
               'relative lowercase pr-5 z-20',
               'transition-[letter-spacing] left-[inherit] duration-300 ease-in-out tracking-normal',
               'group-hover:tracking-widest',
