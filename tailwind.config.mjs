@@ -61,6 +61,7 @@ const config = {
           foreground: 'hsl(var(--accent-foreground))',
         },
         background: 'hsl(var(--background))',
+        brand: 'var(--brand)',
         border: 'hsla(var(--border))',
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -109,10 +110,10 @@ const config = {
         },
         'slide-left-right': {
           '0%': {
-            left: '100%',
+            left: '95%',
           },
           '100%': {
-            left: 0,
+            left: '-15px',
           },
         },
       },

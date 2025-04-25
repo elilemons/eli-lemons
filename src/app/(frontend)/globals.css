@@ -25,6 +25,9 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
+    --brand: rgb(255, 190, 0);
+    /* #ffbe00 */
+
     --card: 240 5% 96%;
     --card-foreground: 222.2 84% 4.9%;
 
