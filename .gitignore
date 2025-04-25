@@ -14,3 +14,6 @@ public/robots.txt
 public/sitemap*.xml
 
 dump/
+
+localhost-key.pem
+localhost.pem
