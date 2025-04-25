@@ -4,7 +4,7 @@ import { cn } from '@/utilities/ui'
 import { useEffect, useRef } from 'react'
 
 export const Light: React.FC = () => {
-  const { position, requestPermission } = useGyroscope()
+  const { position } = useGyroscope()
   const lightEffectRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

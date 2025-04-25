@@ -3,7 +3,6 @@ import { CMSLink } from '../../components/Link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { cn } from '@/utilities/ui'
-import { Fragment } from 'react'
 
 type Props = LinkBlockProps & {
   className?: string
