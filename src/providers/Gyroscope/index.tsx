@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
 
 interface GyroscopeContextType {
   isSupported: boolean
@@ -39,35 +39,41 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
   }
 
   // Handle device orientation changes
-  const handleOrientation = (event: DeviceOrientationEvent) => {
-    if (!isEnabled) return
+  const handleOrientation = useCallback(
+    (event: DeviceOrientationEvent) => {
+      if (!isEnabled) return
 
-    // Get the orientation data
-    const beta = event.beta // -180 to 180 (front/back tilt)
-    const gamma = event.gamma // -90 to 90 (left/right tilt)
+      // Get the orientation data
+      const beta = event.beta // -180 to 180 (front/back tilt)
+      const gamma = event.gamma // -90 to 90 (left/right tilt)
 
-    if (beta === null || gamma === null) return
+      if (beta === null || gamma === null) return
 
-    // Convert tilt to percentage offset (limited range)
-    const xOffset = clamp((gamma / 45) * maxOffset, -maxOffset, maxOffset)
-    const yOffset = clamp((beta / 45) * maxOffset, -maxOffset, maxOffset)
+      // Convert tilt to percentage offset (limited range)
+      const xOffset = clamp((gamma / 45) * maxOffset, -maxOffset, maxOffset)
+      const yOffset = clamp((beta / 45) * maxOffset, -maxOffset, maxOffset)
 
-    setPosition({ x: xOffset, y: yOffset })
-  }
+      setPosition({ x: xOffset, y: yOffset })
+    },
+    [isEnabled, maxOffset],
+  )
 
   // Handle mouse movement for desktop fallback
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isEnabled) {
-      // Enable with first mouse move if no gyroscope
-      setIsEnabled(true)
-    }
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isEnabled) {
+        // Enable with first mouse move if no gyroscope
+        setIsEnabled(true)
+      }
 
-    // Calculate mouse position relative to center of screen
-    const xPos = (e.clientX / window.innerWidth - 0.5) * 100
-    const yPos = (e.clientY / window.innerHeight - 0.5) * 100
+      // Calculate mouse position relative to center of screen
+      const xPos = (e.clientX / window.innerWidth - 0.5) * 100
+      const yPos = (e.clientY / window.innerHeight - 0.5) * 100
 
-    setPosition({ x: xPos, y: yPos })
-  }
+      setPosition({ x: xPos, y: yPos })
+    },
+    [isEnabled],
+  )
 
   // Enable gyroscope
   const enableGyroscope = () => {
@@ -124,8 +130,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
         document.removeEventListener('mousemove', handleMouseMove)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [handleMouseMove, handleOrientation])
 
   const contextValue: GyroscopeContextType = {
     isSupported,
