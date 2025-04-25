@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
           <Light />
-          <div className="max-w-md w-full mx-auto h-full flex flex-col justify-center flex-1 border-x dark:border-white light:border-black">
+          <div className="max-w-md w-full mx-auto h-full flex flex-col justify-center flex-1">
             {children}
           </div>
           <Footer />
