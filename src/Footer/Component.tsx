@@ -8,7 +8,7 @@ import { GyroscopePermissionButton } from '@/components/GyroscopePermissionButto
 
 export const Footer: FC = () => {
   return (
-    <footer className="mt-auto">
+    <footer className="max-w-md w-full mx-auto mt-auto border-x dark:border-white light:border-black z-10">
       <div className="container py-8 gap-8 flex flex-row justify-between items-end">
         <Link className="flex items-center" href="/">
           <Lemon />

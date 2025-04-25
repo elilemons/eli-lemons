@@ -29,8 +29,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               preview: isEnabled,
             }}
           />
-          <div className="flex flex-col flex-1 justify-center h-full w-full">
-            <Light />
+          <Light />
+          <div className="max-w-md w-full mx-auto h-full flex flex-col justify-center flex-1 border-x dark:border-white light:border-black">
             {children}
           </div>
           <Footer />
