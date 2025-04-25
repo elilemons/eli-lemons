@@ -79,9 +79,11 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
   const requestPermission = () => {
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (DeviceOrientationEvent as any).requestPermission === 'function'
     ) {
       // iOS 13+ requires permission
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(DeviceOrientationEvent as any)
         .requestPermission()
         .then((permissionState: string) => {
@@ -109,6 +111,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
       typeof window !== 'undefined' &&
       (!window.DeviceOrientationEvent ||
         (window.DeviceOrientationEvent &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           typeof (DeviceOrientationEvent as any).requestPermission !== 'function'))
     ) {
       document.addEventListener('mousemove', handleMouseMove)
@@ -121,6 +124,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
         document.removeEventListener('mousemove', handleMouseMove)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const contextValue: GyroscopeContextType = {
