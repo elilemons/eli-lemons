@@ -95,8 +95,16 @@ const config = {
         warning: 'hsl(var(--warning))',
       },
       fontFamily: {
-        mono: ['"Roboto Mono"'],
-        sans: ['"Roboto"'],
+        mono: ['"Roboto Mono"', 'monospace'],
+        sans: [
+          '"Roboto"',
+          'sans-serif',
+          'system-ui',
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji',
+        ],
       },
       keyframes: {
         'accordion-down': {
