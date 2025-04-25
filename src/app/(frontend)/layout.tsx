@@ -14,6 +14,7 @@ import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
+import { Light } from '@/components/Light'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -32,8 +33,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               preview: isEnabled,
             }}
           />
-
-          {children}
+          <div className="relative flex h-full flex-1 flex-col justify-center">
+            <Light />
+            {children}
+          </div>
           <Footer />
         </Providers>
       </body>
