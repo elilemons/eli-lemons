@@ -1,9 +1,14 @@
 'use client'
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  useRef,
+} from 'react'
 
-type DeviceOrientationEventWithPermission = typeof DeviceOrientationEvent & {
-  requestPermission?: () => Promise<'granted' | 'denied'>
-}
 interface GyroscopeContextType {
   isSupported: boolean
   isEnabled: boolean
@@ -11,14 +16,14 @@ interface GyroscopeContextType {
     x: number
     y: number
   }
-  requestPermission: () => void
+  enableGyroscope: () => void
 }
 
 const defaultContext: GyroscopeContextType = {
   isSupported: false,
   isEnabled: false,
   position: { x: 0, y: 0 },
-  requestPermission: () => {},
+  enableGyroscope: () => {},
 }
 
 const GyroscopeContext = createContext<GyroscopeContextType>(defaultContext)
@@ -41,25 +46,27 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
     return Math.min(Math.max(value, min), max)
   }
 
-  // Handle device orientation changes
-  const handleOrientation = useCallback(
-    (event: DeviceOrientationEvent) => {
+  const handleOrientationWrapper = useCallback((e: DeviceOrientationEvent) => {
+    handleOrientationRef.current(e)
+  }, [])
+
+  const handleOrientationRef = useRef<(e: DeviceOrientationEvent) => void>(() => {})
+
+  useEffect(() => {
+    handleOrientationRef.current = (event: DeviceOrientationEvent) => {
       if (!isEnabled) return
 
-      // Get the orientation data
-      const beta = event.beta // -180 to 180 (front/back tilt)
-      const gamma = event.gamma // -90 to 90 (left/right tilt)
+      const beta = event.beta
+      const gamma = event.gamma
 
       if (beta === null || gamma === null) return
 
-      // Convert tilt to percentage offset (limited range)
       const xOffset = clamp((gamma / 45) * maxOffset, -maxOffset, maxOffset)
       const yOffset = clamp((beta / 45) * maxOffset, -maxOffset, maxOffset)
 
       setPosition({ x: xOffset, y: yOffset })
-    },
-    [isEnabled, maxOffset],
-  )
+    }
+  }, [isEnabled, maxOffset])
 
   // Handle mouse movement for desktop fallback
   const handleMouseMove = useCallback(
@@ -78,40 +85,29 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
     [isEnabled],
   )
 
-  // Enable gyroscope
-  const enableGyroscope = () => {
-    setIsEnabled(true)
-    window.addEventListener('deviceorientation', handleOrientation)
-  }
-
   // Request permission for iOS 13+ devices
-  const requestPermission = () => {
+  const enableGyroscope = () => {
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (DeviceOrientationEvent as any).requestPermission === 'function'
     ) {
-      // iOS 13+ requires permission
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(DeviceOrientationEvent as any)
         .requestPermission()
         .then((permissionState: string) => {
           if (permissionState === 'granted') {
-            enableGyroscope()
+            window.addEventListener('deviceorientation', (e) => handleOrientationRef.current(e))
+            setIsEnabled(true)
           } else {
             alert('Permission to use gyroscope was denied')
           }
         })
-        .catch((err: unknown) => {
-          if (err instanceof Error) {
-            console.error('Permission request failed:', err.message)
-          } else {
-            console.error('Permission request failed:', err)
-          }
+        .catch((err: any) => {
+          console.error('Permission request failed', err)
         })
     } else {
-      // Non-iOS 13+ devices don't need permission
-      enableGyroscope()
+      // Android or older browsers
+      window.addEventListener('deviceorientation', (e) => handleOrientationRef.current(e))
+      setIsEnabled(true)
     }
   }
 
@@ -135,17 +131,17 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
     // Cleanup event listeners
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('deviceorientation', handleOrientation)
+        window.removeEventListener('deviceorientation', handleOrientationWrapper)
         document.removeEventListener('mousemove', handleMouseMove)
       }
     }
-  }, [handleMouseMove, handleOrientation])
+  }, [handleMouseMove, handleOrientationWrapper])
 
   const contextValue: GyroscopeContextType = {
     isSupported,
     isEnabled,
     position,
-    requestPermission,
+    enableGyroscope,
   }
 
   return <GyroscopeContext.Provider value={contextValue}>{children}</GyroscopeContext.Provider>
