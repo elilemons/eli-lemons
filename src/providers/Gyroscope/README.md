@@ -34,14 +34,19 @@ In any component that needs access to gyroscope data:
 import { useGyroscope } from '../providers/Gyroscope'
 
 const YourComponent = () => {
-  const { isSupported, isEnabled, position, requestPermission } = useGyroscope()
+  const { isSupported, isEnabled, position, enableGyroscope, enableMouseTracking } = useGyroscope()
 
   // Use position.x and position.y to create interactive effects
   // position values range from -40 to 40 by default (percentage)
 
   return (
     <div>
-      {!isEnabled && isSupported && <button onClick={requestPermission}>Enable Gyroscope</button>}
+      {!isEnabled && isSupported && (
+        <>
+          <button onClick={enableGyroscope}>Enable Gyroscope</button>
+          <button onClick={enableMouseTracking}>Enable Mouse Tracking</button>
+        </>
+      )}
 
       <div
         style={{
@@ -55,21 +60,6 @@ const YourComponent = () => {
 }
 ```
 
-### Demo Component
-
-A ready-to-use demo component is available:
-
-```jsx
-import { GyroscopeDemo } from '../components/Gyroscope'
-
-const YourPage = () => (
-  <div>
-    <h1>Gyroscope Demo</h1>
-    <GyroscopeDemo className="custom-class" />
-  </div>
-)
-```
-
 ## API Reference
 
 ### GyroscopeProvider Props
@@ -81,9 +71,10 @@ const YourPage = () => (
 
 ### useGyroscope Hook Return Value
 
-| Property          | Type                     | Description                              |
-| ----------------- | ------------------------ | ---------------------------------------- |
-| isSupported       | boolean                  | Whether the device supports gyroscope    |
-| isEnabled         | boolean                  | Whether gyroscope is currently enabled   |
-| position          | { x: number, y: number } | Current position values (percentage)     |
-| requestPermission | () => void               | Function to request gyroscope permission |
+| Property            | Type                     | Description                                    |
+| ------------------- | ------------------------ | ---------------------------------------------- |
+| isSupported         | boolean                  | Whether the device supports gyroscope          |
+| isEnabled           | boolean                  | Whether gyroscope is currently enabled         |
+| position            | { x: number, y: number } | Current position values (percentage)           |
+| enableGyroscope     | () => void               | Function to enable device orientation tracking |
+| enableMouseTracking | () => void               | Function to enable mouse movement tracking     |
