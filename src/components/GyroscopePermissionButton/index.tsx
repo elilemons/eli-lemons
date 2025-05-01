@@ -10,9 +10,9 @@ export const GyroscopePermissionButton: FC = () => {
       {isSupported && !isEnabled && (
         <button
           onClick={requestPermission}
-          className="px-5 py-2.5 bg-brand hover:bg-yellow-600 disabled:bg-[#95a5a6] disabled:cursor-not-allowed text-black rounded cursor-pointer text-base z-10 mt-5 flex flex-row gap-2 items-center"
+          className="px-5 py-2.5 bg-brand hover:bg-yellow-600 disabled:bg-[#95a5a6] disabled:cursor-not-allowed text-black rounded cursor-pointer text-xs lg:text-base z-10 mt-5 flex flex-row gap-2 items-center"
         >
-          <Rotate3d />
+          <Rotate3d className="size-4" />
           Enable Gyroscope
         </button>
       )}
