@@ -91,6 +91,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
       typeof DeviceOrientationEvent !== 'undefined' &&
       typeof (DeviceOrientationEvent as any).requestPermission === 'function'
     ) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(DeviceOrientationEvent as any)
         .requestPermission()
         .then((permissionState: string) => {
@@ -101,6 +102,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
             alert('Permission to use gyroscope was denied')
           }
         })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .catch((err: any) => {
           console.error('Permission request failed', err)
         })
