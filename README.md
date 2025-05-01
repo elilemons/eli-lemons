@@ -7,6 +7,8 @@ This is the code for my personal website.
 - [Eli Lemons](#eli-lemons)
   - [In this Document:](#in-this-document)
   - [Testing Locally](#testing-locally)
+    - [Inspecting Phone Locally](#inspecting-phone-locally)
+    - [Testing on iPhone](#testing-on-iphone)
   - [Deployment](#deployment)
 
 ## Testing Locally
@@ -42,6 +44,14 @@ pnpm dev
 When you go to https://localhost:3010/ it may warn the site isn't secure. Depending on your browser, you may need to click "Advanced" and then "Proceed to localhost (unsafe)".
 
 To do so on your phone, find the IP address of your computer and go to dress of your computer and go to https://URL_ADDRESS_ADDRESS>:3010/.
+
+### Inspecting Phone Locally
+
+[Follow this guide](https://developer.chrome.com/blog/debugging-chrome-on-ios)
+
+### Testing on iPhone
+
+There is also a web inspector plugin for Safari. [Link](https://apps.apple.com/us/app/web-inspector/id1584825745)
 
 ## Deployment
 
