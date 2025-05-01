@@ -1,4 +1,5 @@
 'use client'
+
 import {
   createContext,
   useContext,
@@ -9,6 +10,9 @@ import {
   useCallback,
 } from 'react'
 
+type DeviceOrientationEventWithPermission = typeof DeviceOrientationEvent & {
+  requestPermission?: () => Promise<'granted' | 'denied'>
+}
 interface GyroscopeContextType {
   isSupported: boolean
   isEnabled: boolean
@@ -75,13 +79,11 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
     setPosition({ x: xPos, y: yPos })
   }, [])
 
+  const DeviceOrientationWithPerm = DeviceOrientationEvent as DeviceOrientationEventWithPermission
+
   const enableGyroscope = () => {
-    if (
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof (DeviceOrientationEvent as any).requestPermission === 'function'
-    ) {
-      ;(DeviceOrientationEvent as any)
-        .requestPermission()
+    if (typeof DeviceOrientationWithPerm.requestPermission === 'function') {
+      DeviceOrientationWithPerm.requestPermission()
         .then((permissionState: string) => {
           if (permissionState === 'granted') {
             window.addEventListener('deviceorientation', handleOrientationWrapper)
@@ -90,8 +92,12 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
             alert('Permission to use gyroscope was denied')
           }
         })
-        .catch((err: any) => {
-          console.error('Permission request failed', err)
+        .catch((err: unknown) => {
+          if (err instanceof Error) {
+            console.error('Permission request failed:', err.message)
+          } else {
+            console.error('Permission request failed:', err)
+          }
         })
     } else {
       // Android or older browsers
