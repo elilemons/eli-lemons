@@ -1,5 +1,13 @@
 'use client'
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  useCallback,
+} from 'react'
 
 interface GyroscopeContextType {
   isSupported: boolean
@@ -8,14 +16,16 @@ interface GyroscopeContextType {
     x: number
     y: number
   }
-  requestPermission: () => void
+  enableGyroscope: () => void
+  enableMouseTracking: () => void
 }
 
 const defaultContext: GyroscopeContextType = {
   isSupported: false,
   isEnabled: false,
   position: { x: 0, y: 0 },
-  requestPermission: () => {},
+  enableGyroscope: () => {},
+  enableMouseTracking: () => {},
 }
 
 const GyroscopeContext = createContext<GyroscopeContextType>(defaultContext)
@@ -37,106 +47,88 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
   const clamp = (value: number, min: number, max: number): number => {
     return Math.min(Math.max(value, min), max)
   }
+  const handleOrientationWrapper = (e: DeviceOrientationEvent) => handleOrientationRef.current(e)
 
-  // Handle device orientation changes
-  const handleOrientation = useCallback(
-    (event: DeviceOrientationEvent) => {
+  const handleOrientationRef = useRef<(e: DeviceOrientationEvent) => void>(() => {})
+  useEffect(() => {
+    handleOrientationRef.current = (event: DeviceOrientationEvent) => {
       if (!isEnabled) return
 
-      // Get the orientation data
-      const beta = event.beta // -180 to 180 (front/back tilt)
-      const gamma = event.gamma // -90 to 90 (left/right tilt)
+      const beta = event.beta
+      const gamma = event.gamma
 
       if (beta === null || gamma === null) return
 
-      // Convert tilt to percentage offset (limited range)
       const xOffset = clamp((gamma / 45) * maxOffset, -maxOffset, maxOffset)
       const yOffset = clamp((beta / 45) * maxOffset, -maxOffset, maxOffset)
 
       setPosition({ x: xOffset, y: yOffset })
-    },
-    [isEnabled, maxOffset],
-  )
+    }
+  }, [isEnabled, maxOffset])
 
   // Handle mouse movement for desktop fallback
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isEnabled) {
-        // Enable with first mouse move if no gyroscope
-        setIsEnabled(true)
-      }
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    // Calculate mouse position relative to center of screen
+    const xPos = (e.clientX / window.innerWidth - 0.5) * 100
+    const yPos = (e.clientY / window.innerHeight - 0.5) * 100
 
-      // Calculate mouse position relative to center of screen
-      const xPos = (e.clientX / window.innerWidth - 0.5) * 100
-      const yPos = (e.clientY / window.innerHeight - 0.5) * 100
+    setPosition({ x: xPos, y: yPos })
+  }, [])
 
-      setPosition({ x: xPos, y: yPos })
-    },
-    [isEnabled],
-  )
-
-  // Enable gyroscope
   const enableGyroscope = () => {
-    setIsEnabled(true)
-    window.addEventListener('deviceorientation', handleOrientation)
-  }
-
-  // Request permission for iOS 13+ devices
-  const requestPermission = () => {
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (DeviceOrientationEvent as any).requestPermission === 'function'
     ) {
-      // iOS 13+ requires permission
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(DeviceOrientationEvent as any)
         .requestPermission()
         .then((permissionState: string) => {
           if (permissionState === 'granted') {
-            enableGyroscope()
+            window.addEventListener('deviceorientation', handleOrientationWrapper)
+            setIsEnabled(true)
           } else {
             alert('Permission to use gyroscope was denied')
           }
         })
-        .catch(console.error)
+        .catch((err: any) => {
+          console.error('Permission request failed', err)
+        })
     } else {
-      // Non-iOS 13+ devices don't need permission
-      enableGyroscope()
+      // Android or older browsers
+      window.addEventListener('deviceorientation', handleOrientationWrapper)
+      setIsEnabled(true)
     }
   }
 
+  const enableMouseTracking = () => {
+    document.removeEventListener('mousemove', handleMouseMove) // clean if already set
+    document.addEventListener('mousemove', handleMouseMove)
+    setIsEnabled(true)
+  }
+
   useEffect(() => {
-    // Check if device has gyroscope
-    if (typeof window !== 'undefined' && window.DeviceOrientationEvent) {
-      setIsSupported(true)
-    }
-
-    // Fallback for desktop testing - mouse movement controls
-    if (
-      typeof window !== 'undefined' &&
-      (!window.DeviceOrientationEvent ||
-        (window.DeviceOrientationEvent &&
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          typeof (DeviceOrientationEvent as any).requestPermission !== 'function'))
-    ) {
-      document.addEventListener('mousemove', handleMouseMove)
-    }
-
-    // Cleanup event listeners
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('deviceorientation', handleOrientation)
-        document.removeEventListener('mousemove', handleMouseMove)
+    const testHandler = (e: DeviceOrientationEvent) => {
+      if (e.alpha !== null || e.beta !== null || e.gamma !== null) {
+        setIsSupported(true)
+        window.removeEventListener('deviceorientation', testHandler)
       }
     }
-  }, [handleMouseMove, handleOrientation])
+
+    window.addEventListener('deviceorientation', testHandler)
+
+    // Also clean up on unmount
+    return () => {
+      window.removeEventListener('deviceorientation', testHandler)
+      document.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [handleMouseMove])
 
   const contextValue: GyroscopeContextType = {
     isSupported,
     isEnabled,
     position,
-    requestPermission,
+    enableGyroscope,
+    enableMouseTracking,
   }
 
   return <GyroscopeContext.Provider value={contextValue}>{children}</GyroscopeContext.Provider>

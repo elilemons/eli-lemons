@@ -11,7 +11,12 @@ export const Footer: FC = () => {
     <footer className="max-w-md w-full mx-auto mt-auto z-10">
       <div className="container py-8 gap-8 flex flex-row justify-between items-end">
         <Link className="flex items-center" href="/">
-          <Lemon className="size-10" />
+          <Lemon
+            props={{
+              width: 30,
+              height: 30,
+            }}
+          />
         </Link>
 
         <GyroscopePermissionButton />
