@@ -123,9 +123,27 @@ const config = {
             left: '-15px',
           },
         },
+        'bounce-up': {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-6px)',
+          },
+        },
+        'bounce-down': {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(6px)',
+          },
+        },
       },
       animation: {
         'slide-left-right': 'slide-left-right 1s cubic-bezier(0.83, 0, 0.17, 1) infinite alternate',
+        'bounce-up': 'bounce-up 1s ease-in-out',
+        'bounce-down': 'bounce-down 1s ease-in-out',
       },
       typography: () => ({
         DEFAULT: {
