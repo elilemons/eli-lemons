@@ -17,3 +17,4 @@ dump/
 
 localhost-key.pem
 localhost.pem
+*.tsbuildinfo
