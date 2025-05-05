@@ -4,7 +4,7 @@ import { CMSLink } from '../../components/Link'
 import { cn } from '@/utilities/ui'
 import ArrowUp from '@/components/Icons/arrow-up'
 import ArrowDown from '@/components/Icons/arrow-down'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Props = {
   className?: string
@@ -13,6 +13,8 @@ type Props = {
 
 export const Rolodex: React.FC<Props> = ({ className, links }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0)
+  const [offset, setOffset] = useState(0)
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([])
 
   const bounce = (dir: 'up' | 'down') => {
     const el = document.getElementById('link-block')
@@ -35,6 +37,16 @@ export const Rolodex: React.FC<Props> = ({ className, links }) => {
   const arrowIconClasses =
     'size-8 group-hover:animate-bounce-up group-hover:repeat-infinite group-hover:text-brand transition-colors duration-1000 dark:text-white light:text-black'
 
+  useEffect(() => {
+    if (!itemRefs.current[activeIndex]) return
+
+    // Calculate total height above the center item
+    const topOffset = itemRefs.current
+      .slice(0, activeIndex)
+      .reduce((acc, el) => acc + (el?.getBoundingClientRect().height || 0), 0)
+
+    setOffset(topOffset)
+  }, [activeIndex])
   return (
     <div className="container my-16 flex flex-col gap-10">
       <button
@@ -43,10 +55,16 @@ export const Rolodex: React.FC<Props> = ({ className, links }) => {
       >
         <ArrowUp className={arrowIconClasses} />
       </button>
-      <div className="flex flex-col w-full items-end">
+      <div
+        className="flex flex-col w-full items-end"
+        style={{ transform: `translateY(-${offset}px)` }}
+      >
         {links?.map((link, i) => (
           <div
             key={link.id}
+            ref={(element: HTMLDivElement | null) => {
+              itemRefs.current[i] = element
+            }}
             className={cn(
               'relative group hover:cursor-pointer',
               'text-6xl',
