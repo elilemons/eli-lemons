@@ -34,7 +34,7 @@ export const Rolodex: React.FC<Props> = ({ className, links }) => {
   }
 
   const arrowIconClasses =
-    'size-8 group-hover:animate-bounce-up  group-hover:text-brand transition-colors duration-1000 dark:text-white light:text-black'
+    'size-8 group-hover:animate-bounce-up lg:group-hover:text-brand transition-colors duration-1000 dark:text-white light:text-black'
 
   useEffect(() => {
     const el = itemRefs.current[activeIndex]
