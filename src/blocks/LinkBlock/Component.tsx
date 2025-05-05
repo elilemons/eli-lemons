@@ -1,10 +1,6 @@
 import type { LinkBlock as LinkBlockProps } from '@/payload-types'
-import { CMSLink } from '../../components/Link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { cn } from '@/utilities/ui'
-import ArrowUp from '@/components/Icons/arrow-up'
-import ArrowDown from '@/components/Icons/arrow-down'
 import { Rolodex } from '@/components/Rolodex'
 
 type Props = LinkBlockProps & {

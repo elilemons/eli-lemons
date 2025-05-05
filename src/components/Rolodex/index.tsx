@@ -1,5 +1,5 @@
 'use client'
-import type { Link, LinkBlock as LinkBlockProps } from '@/payload-types'
+import type { Link } from '@/payload-types'
 import { CMSLink } from '../../components/Link'
 import { cn } from '@/utilities/ui'
 import ArrowUp from '@/components/Icons/arrow-up'

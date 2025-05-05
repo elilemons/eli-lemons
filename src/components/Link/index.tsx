@@ -72,7 +72,9 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
       size={size}
       variant={appearance}
       onClick={(e) => {
-        if (disabled) e.preventDefault
+        if (disabled) {
+          e.preventDefault()
+        }
       }}
     >
       {disabled ? (

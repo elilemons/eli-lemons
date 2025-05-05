@@ -89,6 +89,7 @@ export const GyroscopeProvider: React.FC<GyroscopeProviderProps> = ({
   const enableGyroscope = () => {
     if (
       typeof DeviceOrientationEvent !== 'undefined' &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (DeviceOrientationEvent as any).requestPermission === 'function'
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
