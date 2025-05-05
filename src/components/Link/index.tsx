@@ -9,6 +9,7 @@ type CMSLinkType = {
   appearance?: 'inline' | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
+  disabled?: boolean
   label?: string | null
   newTab?: boolean | null
   reference?: {
@@ -26,6 +27,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     appearance = 'inline',
     children,
     className,
+    disabled,
     label,
     newTab,
     reference,
@@ -44,10 +46,18 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   const size = appearance === 'link' ? 'clear' : sizeFromProps
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
+  const disabledLink = (
+    <div className={className}>
+      {label && label}
+      {children && children}
+    </div>
+  )
 
   /* Ensure we don't break any styles set by richText */
   if (appearance === 'inline') {
-    return (
+    return disabled ? (
+      disabledLink
+    ) : (
       <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
         {label && label}
         {children && children}
@@ -56,11 +66,23 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   }
 
   return (
-    <Button asChild className={className} size={size} variant={appearance}>
-      <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
-        {label && label}
-        {children && children}
-      </Link>
+    <Button
+      asChild
+      className={className}
+      size={size}
+      variant={appearance}
+      onClick={(e) => {
+        if (disabled) e.preventDefault
+      }}
+    >
+      {disabled ? (
+        disabledLink
+      ) : (
+        <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
+          {label && label}
+          {children && children}
+        </Link>
+      )}
     </Button>
   )
 }
